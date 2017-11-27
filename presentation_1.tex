@@ -78,6 +78,10 @@
 
 \usepackage{graphicx} % Allows including images
 \usepackage{booktabs} % Allows the use of \toprule, \midrule and \bottomrule in tables
+\usepackage{svg}
+\usepackage{amsmath}
+\usepackage{color}
+\usepackage{animate}
 
 %----------------------------------------------------------------------------------------
 %	TITLE PAGE
@@ -88,12 +92,14 @@
 \author{Mengye Ren} % Your name
 \institute[Univ. of Toronto] % Your institution as it will appear on the bottom of every slide, may be shorthand to save space
 {
-% University of Toronto \\ % Your institution for the title page
+University of Toronto \\ % Your institution for the title page
+\textit{mren@cs.toronto.edu} % Your email address
+\\
+\medskip
 Paper by Michael Elkin\\
 Department of Computer Science\\
 Ben-Gurion University of The Negev, Beer-Sheva, Israel\\
 \medskip
-% \textit{mren@cs.toronto.edu} % Your email address
 }
 \date{\today} % Date, can be changed to a custom date
 
@@ -111,12 +117,10 @@ Ben-Gurion University of The Negev, Beer-Sheva, Israel\\
 %----------------------------------------------------------------------------------------
 %	PRESENTATION SLIDES
 %----------------------------------------------------------------------------------------
-
-%------------------------------------------------
-\section{First Section} % Sections can be created in order to organize your presentation into discrete blocks, all sections and subsections are automatically printed in the table of contents as an overview of the talk
-%------------------------------------------------
-
-\subsection{Subsection Example} % A subsection can be created just before a set of slides with a common theme to further break down your presentation into chunks
+\input{sections/introduction}
+\input{sections/background}
+\input{sections/method}
+\input{sections/analysis}
 
 \begin{frame}
 \frametitle{Paragraphs of Text}
