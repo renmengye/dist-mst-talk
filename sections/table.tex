@@ -1,0 +1,24 @@
+% !TEX root=../presentation_1.tex
+\begin{table}
+\renewcommand{\arraystretch}{1.3}
+\caption{Summary of the complexity of distributed MST algorithms}
+\begin{tabular}{|c|c|c|}
+\hline
+Method         & Time Complexity            & Message Complexity\\
+\hline
+\hline
+Pipeline-MST   & $O(D + n)$                 & $O(m + n^2)$\\
+\hline
+GHS            & $O(n \log n)$              & $O(m + n \log n)$\\
+\hline
+Controlled-GHS & $O(D + \sqrt{n} \log^* n)$ & $O(m + n^{\frac{3}{2}})$\\
+\hline
+\textbf{This Work}& $O((D + \sqrt{n}) \log n)$  & $O(m \log n + n \log n \log^* n)$ \\
+\hline
+\hline
+Randomized [PRS16]& $\tilde{O}(D + \sqrt{n})$  & $\tilde{O}(m)$ \\
+\hline
+Lower Bound [PRS16] & $\tilde{\Omega}(D + \sqrt{n})$  & $\Omega(m)$ \\
+\hline
+\end{tabular}
+\end{table}
