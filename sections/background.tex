@@ -45,13 +45,13 @@
 \frametitle{Pipeline-MST}
 \begin{itemize}
     \item A distributed version of Kruskal's algorithm.
-    \item Build a BFS tree first, this takes $O(D)$ rounds with $O(m)$ messages.
-    \item Then each node keeps a set of candidate edges.
+    \item Build a BFS tree first, $O(D)$ rounds with $O(m)$ messages.
+    \item Each node keeps a candidate set, initializes at neighbor edges.
     \item For each round
     \begin{itemize}
-        \item Each node adds the incoming edges to the cadidates.
-        \item Each node removes the heaviest edge in any cycle in the candidates.
-        \item Each node sends the lightest candidate edge to its BFS tree parent.
+        \item Add the incoming edges to the set.
+        \item Remove the \textbf{heaviest} edge in any \textbf{cycle} in the set.
+        \item Send the \textbf{lightest} candidate to its BFS parent.
     \end{itemize}
     \item After $(D+n-2)$ rounds, the root broadcast the MST edges to the whole tree.
     \item $(D-1)$ rounds to establish stable links between the leaves and the root, and only need $(n-1)$ rounds to find the edges needed for an MST. Use another $(D+n-2)$ rounds to braodcast.
@@ -64,82 +64,87 @@
 \begin{frame}
 \frametitle{GHS Algorithm}
 \begin{itemize}
-    \item A distributed version of Boruvka's algorithm.
-    \item Each node starts with a MST tree with height 1.
-    \item At phase i, any MST with size less than $2^i$ fuses into another MST.
-    \item Choose the minimum outgoing edge of each component for merging (Test, Accept, Decline.)
-    \item There are $\log n$ phases in total, before the algorithm terminates.
-    \item In the worst case, an MST may need to wait for $O(n)$ rounds in each phase since the component size can grow to size $O(n)$. 
+    \item A distributed version of \textbf{Boruvka's} algorithm: merging components.
+    \item Each node starts as \textbf{a component tree} with height 0.
+    \item At phase $i$, any component with size less than $2^i$ fuses into another MST.
+    \item Choose the minimum outgoing edge (MWOE) of each component for merging.
+    \item In the worst case, a component may need to wait for $O(n)$ rounds in each phase since the component size can grow to size $O(n)$ in the beginning. 
+\end{itemize}
+\end{frame}
+
+\subsection{GHS [GHS86]}
+\begin{frame}
+\frametitle{GHS Algorithm}
+\begin{itemize}
     \item Each edge can only be accepted or declined once $O(m)$. Every round each node needs to send convergecast and broadcast once, $O(n \log n)$.
-    \item In total, $O(n \log n)$ rounds and $O(m + n \log n)$ messages.
-    \item Merging part can be simplified by using maximal matching!
+    \item $\log n$ phases, $O(n \log n)$ rounds and $O(m + n \log n)$ messages.
 \end{itemize}
 \end{frame}
 
-\subsection{Cole-Vishkin [CV86]}
-\begin{frame}
-\frametitle{Cole-Vishkin's vectex coloring algorithm [CV86]}
-\begin{itemize}
-    \item To further improve the complexity, we need to look at some backgrounds graph vertex coloring.
-    \item In a valid coloring, neighboring vertices have different colors.
-    \item Here, we focus on a graph that is a directed list or a cycle.
-    \item We can always reduce 1 color at a time, until the graph is 3-colored.
-    \item 2-coloring the graph is possible but involves global knowledge.
-\end{itemize}
-\begin{figure}
-    \includegraphics[width=0.9\textwidth]{figures/reduce_one.png}
-\end{figure}
-\end{frame}
+% \subsection{Cole-Vishkin [CV86]}
+% \begin{frame}
+% \frametitle{Cole-Vishkin's vectex coloring algorithm [CV86]}
+% \begin{itemize}
+%     \item To further improve the complexity, we need to look at some backgrounds graph vertex coloring.
+%     \item In a valid coloring, neighboring vertices have different colors.
+%     \item Here, we focus on a graph that is a directed list or a cycle.
+%     \item We can always reduce 1 color at a time, until the graph is 3-colored.
+%     \item 2-coloring the graph is possible but involves global knowledge.
+% \end{itemize}
+% \begin{figure}
+%     \includegraphics[width=0.9\textwidth]{figures/reduce_one.png}
+% \end{figure}
+% \end{frame}
 
-\begin{frame}
-\frametitle{Cole-Vishkin's vectex coloring algorithm [CV86]}
-\begin{figure}
-    \includegraphics[width=0.9\textwidth]{figures/cole-vishkin.png}
-\end{figure}
-\end{frame}
+% \begin{frame}
+% \frametitle{Cole-Vishkin's vectex coloring algorithm [CV86]}
+% \begin{figure}
+%     \includegraphics[width=0.9\textwidth]{figures/cole-vishkin.png}
+% \end{figure}
+% \end{frame}
 
-\begin{frame}
-\frametitle{Cole-Vishkin's vectex coloring algorithm [CV86]}
-\begin{figure}
-    \includegraphics[width=0.9\textwidth]{figures/cole-vishkin-1.png}
-\end{figure}
-\end{frame}
+% \begin{frame}
+% \frametitle{Cole-Vishkin's vectex coloring algorithm [CV86]}
+% \begin{figure}
+%     \includegraphics[width=0.9\textwidth]{figures/cole-vishkin-1.png}
+% \end{figure}
+% \end{frame}
 
-\begin{frame}
-\frametitle{Cole-Vishkin's vectex coloring algorithm [CV86]}
-\begin{figure}
-    \includegraphics[width=0.9\textwidth]{figures/cole-vishkin-2.png}
-\end{figure}
-\end{frame}
+% \begin{frame}
+% \frametitle{Cole-Vishkin's vectex coloring algorithm [CV86]}
+% \begin{figure}
+%     \includegraphics[width=0.9\textwidth]{figures/cole-vishkin-2.png}
+% \end{figure}
+% \end{frame}
 
-\begin{frame}
-\frametitle{Cole-Vishkin's vectex coloring algorithm [CV86]}
-\begin{figure}
-    \includegraphics[width=0.9\textwidth]{figures/cole-vishkin-3.png}
-\end{figure}
-\end{frame}
+% \begin{frame}
+% \frametitle{Cole-Vishkin's vectex coloring algorithm [CV86]}
+% \begin{figure}
+%     \includegraphics[width=0.9\textwidth]{figures/cole-vishkin-3.png}
+% \end{figure}
+% \end{frame}
 
-\begin{frame}
-\frametitle{Cole-Vishkin's vectex coloring algorithm [CV86]}
-\begin{itemize}
-    \item This can bring us a 6-coloring of the graph in $\log^* n$ time ($\log^* 2^{65536} = 5$).
-    \item We can get a 3-coloring by running the naive algorithm for 3 more iterations.
-\end{itemize}
-\end{frame}
+% \begin{frame}
+% \frametitle{Cole-Vishkin's vectex coloring algorithm [CV86]}
+% \begin{itemize}
+%     \item This can bring us a 6-coloring of the graph in $\log^* n$ time ($\log^* 2^{65536} = 5$).
+%     \item We can get a 3-coloring by running the naive algorithm for 3 more iterations.
+% \end{itemize}
+% \end{frame}
 
-\subsection{Maximal Indepedent Set (MIS) of Rooted Trees [GPS87]}
-\begin{frame}
-\frametitle{Maximal Indepedent Set (MIS) of Rooted Trees [GPS87]}
-\begin{itemize}
-    \item A rooted tree is a tree where edges are directed from children to parents.
-    \item It turns out we can compute a maximal independent set very efficiently on rooted trees.
-    \item We can apply Cole-Vishkin on 3-coloring the rooted tree, just treat each path towards the root as indepedent lists.
-    \item After obtaining a 3-coloring, we can iterate over the colors.
-    \item For each color, a node with that color adds itself to the IS.
-    \item The node also sends a reject message to all of its neighbors, so they will be removed.
-    \item The rejected neighbor can respond to one of the node so that we can get a maximal matching for free.
-\end{itemize}
-\end{frame}
+% \subsection{Maximal Indepedent Set (MIS) of Rooted Trees [GPS87]}
+% \begin{frame}
+% \frametitle{Maximal Indepedent Set (MIS) of Rooted Trees [GPS87]}
+% \begin{itemize}
+%     \item A rooted tree is a tree where edges are directed from children to parents.
+%     \item It turns out we can compute a maximal independent set very efficiently on rooted trees.
+%     \item We can apply Cole-Vishkin on 3-coloring the rooted tree, just treat each path towards the root as indepedent lists.
+%     \item After obtaining a 3-coloring, we can iterate over the colors.
+%     \item For each color, a node with that color adds itself to the IS.
+%     \item The node also sends a reject message to all of its neighbors, so they will be removed.
+%     \item The rejected neighbor can respond to one of the node so that we can get a maximal matching for free.
+% \end{itemize}
+% \end{frame}
 
 \subsection{Controlled-GHS [GKP98, KP98]}
 \begin{frame}
@@ -148,7 +153,8 @@
     \item Pipeline-MST reduces the number of components by 1 per round.
     \item GHS reduces the number of components by half, but trickier merging two giant trees.
     \item Why not combine the two algorithms?
-    \item In the first phase, use GHS to reduce the number of components to $\sqrt{n}$. We can use MIS to compute a maximal matching in the components tree.
+    \item In the first phase, use GHS to reduce the number of components to $\sqrt{n}$. Use maximal matching in the components tree.
+    \item Maximal matching on graph: $\log^*(n)$
     \item In the second phase, use Pipeline-MST to reduce the number of components 1 at a time 
     using an auxillary BFS tree.
 \end{itemize}

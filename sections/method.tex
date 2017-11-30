@@ -4,11 +4,10 @@
 \begin{frame}
 \frametitle{A Simple Deterministic Algorithm [Elk17]}
 \begin{itemize}
-    \item Now, we can look at this paper.
-    \item The idea of this paper is that we can use better BFS broadcasting structure.
-    \item Suppose we have already computed an $(n/k,O(k))$-MST forest $\mathcal{F}$ using GHS. 
-    \item This means we have at most $n/k$ fragments, each with diameter $O(k)$.
-    \item This step takes $O(k \log^*n)$ rounds with $O(m + k \log n)$ messages.
+    \item Idea: use better BFS broadcasting structure.
+    \item Suppose we have an $(n/k,O(k))$-MST forest $\mathcal{F}$ using GHS. 
+    \item At most $n/k$ fragments, each with diameter $O(k)$.
+    \item $O(k \log^*n)$ rounds with $O(m + k \log n)$ messages.
 \end{itemize}
 \end{frame}
 
@@ -16,16 +15,22 @@
 \begin{frame}
 \frametitle{A Simple Deterministic Algorithm [Elk17]}
 \begin{itemize}
-    \item First we build an auxillary BFS tree $\tau$.
-    \item This step takes $O(D)$ time and $O(m)$ messages.
-    \item Then for each node, we compute the interval of the node based on the BFS tree.
+    \item Build an auxillary BFS tree $\tau$.
+    \item $O(D)$ time and $O(m)$ messages.
+    \item Each node compute the BFS interval.
     \begin{itemize}
         \item One convergecast to count the number of leaves under each node.
         \item One broadcast to assign interval.
-        \item Takes $O(D)$ time and $O(n)$ messages.
+        \item $O(D)$ time and $O(n)$ messages.
     \end{itemize}
-    \item Interval is computed so that we know how to route messages from the root to any base fragment F: $v$ finds a child $u$ such that $I(u)$ covers $I(F)$.
-    \item Finally conduct a pipelined convergecast and the root learns the $\frac{n}{k}$ intervals of all the base fragments. Sends messages of the maximum interval of each fragment.
+    \item Interval is computed so that we know how to route messages from the root to any base fragment F
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{A Simple Deterministic Algorithm [Elk17]}
+\begin{itemize}
+    \item Finally conduct a pipelined convergecast and the root learns the intervals of all the base fragments. Sends messages of the maximum interval of each fragment.
     \item Takes $O(D+\frac{n}{k})$ and $O(D \cdot \frac{n}{k})$ messages. (Need to aggregate messages of one fragment at a time.)
 \end{itemize}
 \end{frame}
@@ -33,27 +38,25 @@
 \begin{frame}
 \frametitle{A Simple Deterministic Algorithm [Elk17]}
 \begin{itemize}
-    \item To send the fragment identity, it takes $O(1)$ time and $O(m)$ messages.
+    \item To send the fragment ID, it takes $O(1)$ time and $O(m)$ messages.
     \item To convergecast the $\frac{n}{k}$ fragment identities, it takes $O(D+\frac{n}{k})$ time and $O(D \cdot\frac{n}{k})$ messages.
-    \item We can now assume that each vertex $v$ knows the identity of the base fragment it belongs to, and also the base fragments of its neighbors.
+    \item Now assume that each vertex $v$ knows its base fragment ID, and also the base fragments ID of its neighbors, we can compute MWOE locally, and send the edge to the root of the fragment
     \item Now suppose $D \le \sqrt{n}$, and we select $k=\sqrt{n}$.
-    \item Since we know the fragment identity of the neighbors, we can compute MWOE locally, and sends the information to the root of the fragment. This takes $O(k)=O(\sqrt{n})$ rounds and $O(n)$ messages.
+    \item $O(k)=O(\sqrt{n})$ rounds and $O(n)$ messages.
 \end{itemize}
 \end{frame}
-
 
 \begin{frame}
 \frametitle{A Simple Deterministic Algorithm [Elk17]}
 \begin{itemize}
-    \item After each fragment knows its own MWOE, we can perform a pipelined convergecast to the root. Each time a node forward to its parent the lightest edge for each fragment, if the fragment is routed through this node (remember we computed the interval).
-    \item This takes $O(D+\frac{n}{k})$ rounds and $O(D \cdot \frac{n}{k})$ messages.
-    \item Then the root locally computes the MWOE for every fragment, and tells each fragment which one to merge with.
+    \item Perform a pipelined convergecast to the root.
+    \item $O(D+\frac{n}{k})$ rounds and $O(D \cdot \frac{n}{k})$ messages.
+    \item Then the root locally computes the maximal matching, and tells each fragment which one to merge with.
     \item Sends message $<F,F'>$ through pipelined broadcast, to tell $F$ to merge with $F'$.
-    \item The root node that receives merge message, changes the fragment identity.
-    \item The pipelined broadcast takes $O(D+\frac{n}{k})$ rounds and $O(D \cdot \frac{n}{k})$ messages.
+    \item The node that receives merge message, changes the fragment ID.
+    \item $O(D+\frac{n}{k})$ rounds and $O(D \cdot \frac{n}{k})$ messages.
 \end{itemize}
 \end{frame}
-
 
 \begin{frame}
 \frametitle{A Simple Deterministic Algorithm [Elk17]}
@@ -68,11 +71,9 @@
 \frametitle{A Simple Deterministic Algorithm [Elk17]}
 \begin{itemize}
     \item If $D > \sqrt{n}$, then let $k=D$.
-    % \item Base fragments can be computed in $O(D \log^* n)$ rounds and $O(m + n\log n)$ messages.
-    \item Then we use the same algorithm.
-    \item In total, it requires $O(D+\frac{n}{k}) + O(k\log^* n) + O((D + k + \frac{n}{k})\log n) = O(D\log n)$ time.
+    \item $O(D+\frac{n}{k}) + O(k\log^* n) + O((D + k + \frac{n}{k})\log n) = O(D\log n)$ rounds
     \item The number of messages is the same as before.
-    \item Combining two cases, we have $O((D + \sqrt{n})\log n)$ time and $O(E \log n + n\log n \cdot \log^* n)$ messages.
+    \item Combining two cases, $O((D + \sqrt{n})\log n)$ rounds and $O(E \log n + n\log n \cdot \log^* n)$ messages.
 \end{itemize}
 \end{frame}
 
@@ -80,9 +81,8 @@
 \begin{frame}
 \frametitle{Conclusion}
 \begin{itemize}
-    \item Near optimal time and message complexities (optimal within a polylog factor).
+    \item Near optimal time and message complexities.
     \item A fully deterministic algorithm.
-    % \item Randomized algorithms are known to achieve optimal [PRS16].
 \end{itemize}
 
 \input{sections/table}
