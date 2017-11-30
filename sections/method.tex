@@ -5,12 +5,12 @@
 \frametitle{A Simple Deterministic Algorithm [Elk17]}
 \begin{itemize}
     \item Idea: use better BFS broadcasting structure.
+    \item Like \textbf{GHS}, still merging components, but now use an auxillary BFS tree to coordinate - $O(D)$.
     \item Suppose we have an $(n/k,O(k))$-MST forest $\mathcal{F}$ using GHS. 
-    \item At most $n/k$ fragments, each with diameter $O(k)$.
+    \item At most $n/k$ fragments, diameter $O(k)$.
     \item $O(k \log^*n)$ rounds with $O(m + k \log n)$ messages.
 \end{itemize}
 \end{frame}
-
 
 \begin{frame}
 \frametitle{A Simple Deterministic Algorithm [Elk17]}
@@ -25,6 +25,11 @@
     \end{itemize}
     \item Interval is computed so that we know how to route messages from the root to any base fragment F
 \end{itemize}
+\begin{figure}
+\centering
+\includegraphics[width=0.4\textwidth,trim={0cm 5cm 12cm 0},clip]{figures/bfstree.pdf}
+\includegraphics[width=0.4\textwidth,trim={0cm 10cm 20cm 0},clip]{figures/interval.pdf}
+\end{figure}
 \end{frame}
 
 \begin{frame}
@@ -38,9 +43,10 @@
 \begin{frame}
 \frametitle{A Simple Deterministic Algorithm [Elk17]}
 \begin{itemize}
-    \item To send the fragment ID, it takes $O(1)$ time and $O(m)$ messages.
-    \item To convergecast the $\frac{n}{k}$ fragment identities, it takes $O(D+\frac{n}{k})$ time and $O(D \cdot\frac{n}{k})$ messages.
-    \item Now assume that each vertex $v$ knows its base fragment ID, and also the base fragments ID of its neighbors, we can compute MWOE locally, and send the edge to the root of the fragment
+    \item To send the fragment ID: $O(1)$ rounds and $O(m)$ messages.
+    \item To convergecast the $\frac{n}{k}$ fragment IDs: $O(D+\frac{n}{k})$ rounds and $O(D \cdot\frac{n}{k})$ messages.
+    \item Assume each vertex knows its fragment ID, and also the fragments IDs of its neighbors
+    \item We can compute MWOE locally, and send to the root of the fragment
     \item Now suppose $D \le \sqrt{n}$, and we select $k=\sqrt{n}$.
     \item $O(k)=O(\sqrt{n})$ rounds and $O(n)$ messages.
 \end{itemize}
@@ -49,9 +55,9 @@
 \begin{frame}
 \frametitle{A Simple Deterministic Algorithm [Elk17]}
 \begin{itemize}
-    \item Perform a pipelined convergecast to the root.
+    \item Perform a \textbf{pipelined convergecast} to the root, send MWOE of each component.
     \item $O(D+\frac{n}{k})$ rounds and $O(D \cdot \frac{n}{k})$ messages.
-    \item Then the root locally computes the maximal matching, and tells each fragment which one to merge with.
+    \item Then the root tells each fragment which one to merge with.
     \item Sends message $<F,F'>$ through pipelined broadcast, to tell $F$ to merge with $F'$.
     \item The node that receives merge message, changes the fragment ID.
     \item $O(D+\frac{n}{k})$ rounds and $O(D \cdot \frac{n}{k})$ messages.
@@ -61,9 +67,10 @@
 \begin{frame}
 \frametitle{A Simple Deterministic Algorithm [Elk17]}
 \begin{itemize}
-    \item Finally, every vertex need to notify its neighbor about the change in fragment identity. This takes $O(1)$ time and $O(m)$ messages.
-    \item In total, the overall time complexity is $O(D+\frac{n}{k}) + O(k\log^* n) + O((D + k + \frac{n}{k})\log n) = O(\sqrt{n}\log n)$.
-    \item The overall the message complexity is $O(E \log n + n\log n \cdot \log^* n)$.
+    \item Finally, every vertex notifies its neighbors about the change in fragment ID. 
+    \item $O(1)$ rounds and $O(m)$ messages.
+    \item Round: $O(D+\frac{n}{k}) + O(k\log^* n) + O((D + k + \frac{n}{k})\log n) = O(\sqrt{n}\log n)$.
+    \item Message: $O(E \log n + n\log n \cdot \log^* n)$
 \end{itemize}
 \end{frame}
 
@@ -73,7 +80,8 @@
     \item If $D > \sqrt{n}$, then let $k=D$.
     \item $O(D+\frac{n}{k}) + O(k\log^* n) + O((D + k + \frac{n}{k})\log n) = O(D\log n)$ rounds
     \item The number of messages is the same as before.
-    \item Combining two cases, $O((D + \sqrt{n})\log n)$ rounds and $O(E \log n + n\log n \cdot \log^* n)$ messages.
+    \item Round: $O((D + \sqrt{n})\log n)$
+    \item Message: $O(E \log n + n\log n \cdot \log^* n)$
 \end{itemize}
 \end{frame}
 
